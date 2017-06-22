@@ -13,6 +13,6 @@ def load_dataset(filenames=['haaretz.csv','israelhayom.csv']):
         X = pandas.concat([X,train_cur[0]])
         y = np.append(y,cur_y*np.ones(len(train_cur),dtype=np.int32))
         cur_y += 1
-    X = [x[0] for x in X.values.tolist()]
+    # X = [x[0] for x in X.values.tolist()]
     y = y.tolist()
     return X,y
