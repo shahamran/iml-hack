@@ -270,7 +270,729 @@ barak.halle
 של מי הכותרת הזאת בכלל?
 \end_layout
 
+\begin_layout Subsection
+רקע ועיבוד מקדים
+\end_layout
+
 \begin_layout Standard
+במשימות סיווג של מידע מילולי חסר מבנה )שהוא סוג המידע שקיבלנו( ישנה חשיבות
+ רבה לאופן בחירת הפיצ'רים המתארים באופן המוצלח ביותר את הנתונים, לאור משימת
+ הסיווג.
+ על אף הדמיון לכאורה שבמשימה שלנו למשימות 
+\emph on
+סיווג מסמכים
+\emph default
+ לנושאים, המטרה שהוצבה בפנינו היא למעשה שונה בתכלית - שכן עלינו לדעת להבדיל
+ בין סגנונות שנים על אף הדמיון שבתוכן.
+\end_layout
+
+\begin_layout Standard
+כפתרון בסיסי לבעיה, פנינו לבחינת אוצר המילים של כל אחד מהעיתונים.
+ בבחינה ראשונית זיהינו כי בין קבוצת המילים שבהן נעשה שימוש בכותרות הארץ
+ לבין זו של ישראל היום הבדלים רחבים - אם נסמן ב-
+\begin_inset Formula $H$
+\end_inset
+
+ את קבוצת המילים שבכותרות "הארץ" וב-
+\begin_inset Formula $I$
+\end_inset
+
+ את זו של "ישראל היום", מצאנו כי: 
+\begin_inset Formula 
+\[
+\left|H\backslash I\right|\approx\left|H\cap I\right|\approx\left|I\backslash H\right|
+\]
+
+\end_inset
+
+ בעקבות תובנה זו, הסקנו שאפילו מדד פשוט כמו ההרכב הלקסיקלי של כותרת יכול
+ להעיד על מקורה.
+ לכן, הייצוג הראשון אותו בחרנו לממש הוא ייצוג
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+Bag of Words
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+הממפה כל כותרת לוקטור ב-
+\begin_inset Formula $\left\{ 0,1\right\} ^{d}$
+\end_inset
+
+ כאשר 
+\begin_inset Formula $d$
+\end_inset
+
+ הוא מספר המילים בלקסיקון )הלקסיקון הוא סט המילים בכל נתוני האימון( ובקורדינטה
+ ה-
+\begin_inset Formula $i$
+\end_inset
+
+ מופיע 
+\begin_inset Formula $1$
+\end_inset
+
+ אם"ם המילה ה-
+\begin_inset Formula $i$
+\end_inset
+
+ מופיעה בכותרת.
+\end_layout
+
+\begin_layout Standard
+בשלב הבא, ניסינו לשפר את המודל ע"י נורמליזציה של הוקטורים באמצעות תהליך
+ ה-
+\lang english
+TF_IDF
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+אותו למדנו בכיתה.
+ בנוסף לכך, הרחבנו את מרחב הפיצ'רים בהוספת צמדי מילים )
+\lang english
+bi-grams
+\lang hebrew
+( כפיצ'רים, וזאת על מנת לשמר אלמנט של סדר המילים המופיעות בטקסט, ולא רק
+ את עצם הופעתן.
+\end_layout
+
+\begin_layout Standard
+בהמשך ישיר לשלב האחרון, רצינו להמשיך ולבטא בצורה נאמנה יותר את המאפיינים
+ הסגנוניים בכתיבת הכותרות.
+ קבענו את תפקידה התחבירי של כל מילה בכותרת וניסינו להשתמש במידע זה בשתי
+ דרכים - הראשונה היא הצמדה של מילה ותפקידה התחבירי )ע"מ לחדד את הפיצ'רים
+ הנוכחיים ובכך לשפר ביצועים(, השנייה היא הוספת תפקידיהן התחבירי של המילים
+ כפיצ'ר בפני עצמו )ובכך לאפשר זיהוי תבניות תחביריות המאפיינות את העיתונים
+ השונים(.
+\end_layout
+
+\begin_layout Subsection
+פרטי המימוש הנבחר
+\end_layout
+
+\begin_layout Standard
+להלן תיאור גס של התהליך אותו מימשנו:
+\end_layout
+
+\begin_layout Enumerate
+קריאת הנתונים וערבוב סדר השורות
+\end_layout
+
+\begin_layout Enumerate
+חלוקת המדגם לשני חלקים: מדגם אימון ומדגם מבחן
+\end_layout
+
+\begin_layout Enumerate
+המרת המידע הגולמי למידע עם מבנה:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+יצירת מרחב של מילים וצמדי-מילים
+\end_layout
+
+\begin_layout Enumerate
+תיוג חלקי הדיבר במשפט וצימודם למילים )למשל, 
+\begin_inset Formula $\text{"...Netanyahu said..."}\to\text{"...netanyahu-noun, said-verb..."}$
+\end_inset
+
+(.
+\end_layout
+
+\begin_layout Enumerate
+מתן ערך מספרי לכל מילה/צמד בכל כותרת )על ידי
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+TF-IDF
+\lang hebrew
+(.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+אימון המודל: ביצענו
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+Grid-search
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+על מנת להתאים פרמטר רגולריזציה 
+\begin_inset Formula $\lambda$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+עם
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+cross-validation
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+כדי להתאים מודל מסוג
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+Linear SVM
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+לנתוני האימון
+\end_layout
+
+\begin_layout Enumerate
+בחינת המודל: בדקנו את ביצועי המודל המאומן על מדגם המבחן )כאשר הפלט בשלב
+ זה הוא 
+\begin_inset Formula $L_{V}\left(h\right)=\frac{1}{m}\sum_{i=1}^{m}\ell^{0-1}\left(h,\left(\mathbf{x}_{i},y_{i}\right)\right)$
+\end_inset
+
+ ו-
+\begin_inset Formula $V=\left\{ \left(\mathbf{x}_{i},y_{i}\right)\right\} _{i=1}^{m}$
+\end_inset
+
+ הוא מדגם המבחן(.
+\end_layout
+
+\begin_layout Subsubsection
+תוצאות הערכת המודל
+\end_layout
+
+\begin_layout Standard
+בבדיקת המודל המאומן על מדגם המבחן קיבלנו דיוק של 
+\begin_inset Formula $\approx83\%$
+\end_inset
+
+.
+ כמוכן, לשם שעשוע, השתמשנו במודל המאומן לסווג כותרות עדכניות מהעיתונים הרלוונטים
+ ומצאנו שאחוזי הדיוק המתוארים לעיל משקפים נאמנה את הצלחת המודל )נכון להיום
+ בבוקר( – 
+\begin_inset Formula $\smiley$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+כיוונים אחרים שניסינו
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\lang english
+Bag of Words
+\end_layout
+
+\begin_layout Standard
+בשימוש במודל הפשוט של 
+\lang english
+bag of words
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+הגענו לתוצאות די טובות, אם כי מעט פחות מהמודל הסופי אותו מימשנו.
+ עם זאת, ניכר שעיקר ההצלחה של האחרון נובע מהשימוש במאפיינים הללו )הוספת
+ הפיצ'רים האחרים אחראית לתוספת קטנה לדיוק(.
+\end_layout
+
+\begin_layout Subsubsection
+חלקי הדיבר כפיצ'רים נפרדים 
+\end_layout
+
+\begin_layout Standard
+בשלב זה בחנו את האפשרות לקבוע את זהות הכותרת על סמך חלקי הדיבר המרכיבים
+ אותה 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "argamon2007stylistic"
+
+\end_inset
+
+.
+ זיהינו את חלקי הדיבר באמצעות שימוש במודל מאומן מספריית עיבוד השפה הטבעית
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+nltk
+\lang hebrew
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "nltk"
+
+\end_inset
+
+.
+ ניסינו לחזות את זהות הכותרת הן באמצעות חלקי הדיבר בלבד והן ע"י הוספת חלקי
+ הדיבר כפיצ'רים נוספים 
+\series bold
+ונפרדים מהמילים
+\series default
+ אולם אף אחת מן האפשרויות לא הביאה תוצאות טובות יותר מהמודל הסופי ולכן העדפנו
+ את המודל הפשוט יותר.
+\end_layout
+
+\begin_layout Subsubsection
+מפריד
+\family roman
+\series bold
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+SVM
+\family roman
+\series bold
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+לא לינארי )
+\lang english
+Radial base filter
+\lang hebrew
+(
+\end_layout
+
+\begin_layout Standard
+השימוש במודל זה הביא לתוצאות פחות טובות באופן משמעותי, כנראה בגלל
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+overfitting
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+שכן המצב השתפר כשתפעלנו את פרמטר הרגולריזציה.
+ שוב, בהתאם להעדפתנו את המודל הפשוט, נמנענו מהשימוש בשיטה זו.
+\end_layout
+
+\begin_layout Subsubsection
+רשתות קונבולוציה )
+\lang english
+CNN
+\lang hebrew
+(
+\end_layout
+
+\begin_layout Standard
+בהשראת מאמרו של קים יון 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kim2014convolutional"
+
+\end_inset
+
+ )וממה שלמדנו בכיתה, כמובן(, ניסינו לגשת לבעיה באמצעות רשתות קונבולציה.
+ בדומה לבעיה שלנו, יון ניסה לפתור בעית סיווג בינארי של משפטים באמצעות
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+CNN
+\lang hebrew
+.
+ השתמשנו בארכיטקטורה בה הוא השתמש תוך כיוונון הפרמטרים והתאמתם לנתוני הבעיה
+ שלנו.
+ בדומה לתוצאות המאמר, הגענו לאחוזי דיוק של 
+\begin_inset Formula $\approx74\%$
+\end_inset
+
+ - אחוז נמוך בהרבה משהתקבל במודל הפשוט.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "project"
+options "plain"
+
+\end_inset
+
 
 \end_layout
 

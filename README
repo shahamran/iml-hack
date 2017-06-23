@@ -1,0 +1,14 @@
+=========
+= Files =
+=========
+* classifier.py - includes implementation of the vectorization and classifier's interface
+* training_script.py - goes through the process of reading the data, training the model
+                       and evaluating it
+* load_headlines.py - (not ours) - reads the data files
+* nltk (dir) - contains trained models and functions that the classifier needs
+* svm_model.pkl - the serialized trained model
+* tf_idf_vetorizer.pkl - serialized vectorizer (turns textual data to vectors)
+* README - this file
+* USERS - our names and logins
+* requirements.txt - a list of packages this project depends on (pip compatible format)
+* project.pdf - a report regarding background and implementation details
