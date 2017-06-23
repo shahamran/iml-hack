@@ -16,7 +16,7 @@ import numpy as np
 from load_headlines import load_dataset
 import os
 # set environment variable for nltk
-DATA_DIR = '../data'
+DATA_DIR = '.'
 NLTK_DATA_DIR = os.path.realpath(os.path.join(DATA_DIR, 'nltk'))
 os.environ['NLTK_DATA'] = NLTK_DATA_DIR
 import nltk
